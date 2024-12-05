@@ -1,4 +1,4 @@
-# SParam_Calculations
+# Network_Manipulations
 A Python module for different manipulations with S-Parameters.
 
 **Example files** <br/>
