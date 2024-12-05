@@ -240,7 +240,7 @@ def CalcSParameterNMSE(SComp, SRef):
     S-Parameter measurement, stored in a .csv file
     
     Input Parameters:
-        path   Path of the .csv file   
+        path   Path of the needed .csv file   
     
     Output parameters:
         None
