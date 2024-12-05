@@ -160,17 +160,17 @@ def reset_showdB():
     coefficients separately.
     
     Input Parameters:
-        SComp  ... network object of the S-parameter block which is
-                   compared to the reference one
-        SRef   ... network object used as reference. The frequency grid
-                   and the number of ports of the two S-parameter objects
-                   must be the same
-                   If this variable is left empty, a comparison to a
-                   infinitesimally small, perfecly matched line
+        SComp   network object of the S-parameter block which is
+                compared to the reference one
+        SRef    network object used as reference. The frequency grid
+                and the number of ports of the two S-parameter objects
+                must be the same
+                If this variable is left empty, a comparison to a
+                infinitesimally small, perfecly matched line
     
     Output parameters:
-        NMSERef... Calculated NMSE for the reflection coefficients 
-        NMSETrans... Calculated NMSE for the transmission coefficients
+        NMSERef     Calculated NMSE for the reflection coefficients 
+        NMSETrans   Calculated NMSE for the transmission coefficients
 '''
 def CalcSParameterNMSE(SComp, SRef):
      
@@ -233,13 +233,18 @@ def CalcSParameterNMSE(SComp, SRef):
 
 
 
-
-
-
-
-
-
-
+'''
+    This function is needed to calculate the Mixed-Mode S-Parameters out of 
+    the "normal" S-Parameters. The Rohde und Schwarz ZNA is not able to store
+    the data in another format (as far as we know). The function needs a 4-port
+    S-Parameter measurement, stored in a .csv file
+    
+    Input Parameters:
+        path   Path of the .csv file   
+    
+    Output parameters:
+        None
+'''
 def ZNAExtraction(path):
     
     frequency = []
@@ -275,6 +280,9 @@ def ZNAExtraction(path):
     Scc21_im = []
     Scc22_re = []
     Scc22_im = []
+    
+    if path == '':
+        raise Exception('Path is emty or not a string')
     
     with open(path) as csvfile:
         reader = csv.reader(csvfile, delimiter = ';', quotechar='|')
@@ -325,8 +333,3 @@ def ZNAExtraction(path):
                               Scc21_re, Scc21_im, Scc22_re, Scc22_im)
     
     return ntwk
-
-
-
-
-
