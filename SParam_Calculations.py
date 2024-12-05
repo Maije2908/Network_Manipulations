@@ -3,12 +3,17 @@
 last change: 05.12.2024
 @author: Christoph Maier
 
-
+This module is a selection of functions for manipulations of S-Parameters.
 """
 
 # import needed packages
 import numpy as np 
 import skrf as rf
+
+# set default values of the variables
+eps = np.finfo(np.float64).eps # define epsilon (a very small number)
+ShowCMD = False # Flag if output in the command line should be shown
+ShowdB = False # Flag if results should be given in dB
 
 
 """
@@ -84,31 +89,64 @@ class MixedModeParameter:
         
         
 
-# set default values of the variables
-eps = np.finfo(np.float64).eps
-ShowCMD = False
-ShowdB = False
-
-
-
+'''
+    This function sets the global ShowCMD variable. Results will be shown in 
+    the command line. 
+    
+    Input Parameters:
+        None
+    
+    Output parameters:
+        None
+'''
 def set_showCMD():
     global ShowCMD
     ShowCMD = True
 
 
 
+'''
+    This function resets sets the global ShowCMD variable. Results will be shown
+    in the command line. 
+    
+    Input Parameters:
+        None
+    
+    Output parameters:
+        None
+'''
 def reset_showCMD():
     global ShowCMD
     ShowCMD = False
     
 
 
+'''
+    This function sets the global ShowdB variable. Results will be shown as 
+    dB values. 
+    
+    Input Parameters:
+        None
+    
+    Output parameters:
+        None
+'''
 def set_showdB():
     global ShowdB
     ShowdB = True
 
 
 
+'''
+    This function resets the global ShowdB variable. Results will not be shown
+    as dB values. 
+    
+    Input Parameters:
+        None
+    
+    Output parameters:
+        None
+'''
 def reset_showdB():
     global ShowdB
     ShowdB = False
@@ -161,24 +199,24 @@ def CalcSParameterNMSE(SComp, SRef):
     
     if CompareToUnityLine:
         fLen = len(SComp.f)
-        for cnt_1 in range(NumPorts):
-            for cnt_2 in range(NumPorts):
-                if cnt_1 == cnt_2:
-                    RefNumer = RefNumer + np.sum(np.square(np.abs(SComp.s[:, cnt_1, cnt_2])))
+        for row in range(NumPorts):
+            for column in range(NumPorts):
+                if row == column:
+                    RefNumer = RefNumer + np.sum(np.square(np.abs(SComp.s[:, row, column])))
                 else:
-                    TransNumer = TransNumer + np.sum(np.square(np.abs(SComp.s[:, cnt_1, cnt_2] - 1)))
+                    TransNumer = TransNumer + np.sum(np.square(np.abs(SComp.s[:, row, column] - 1)))
                     TransDenom = TransDenom + fLen
         NMSERef = RefNumer
         NMSETrans = TransNumer / TransDenom
     else:
-        for cnt_1 in range(NumPorts):
-            for cnt_2 in range(NumPorts):
-                if cnt_1 == cnt_2:
-                    RefNumer = RefNumer + np.sum(np.square(np.abs(SComp.s[:, cnt_1, cnt_2] - SRef.s[:, cnt_1, cnt_2])))
-                    RefDenom = RefDenom + np.sum(np.square(np.abs(SRef.s[:, cnt_1, cnt_2])))
+        for row in range(NumPorts):
+            for column in range(NumPorts):
+                if row == column:
+                    RefNumer = RefNumer + np.sum(np.square(np.abs(SComp.s[:, row, column] - SRef.s[:, row, column])))
+                    RefDenom = RefDenom + np.sum(np.square(np.abs(SRef.s[:, row, column])))
                 else:
-                    TransNumer = TransNumer + np.sum(np.square(np.abs(SComp.s[:, cnt_1, cnt_2] - SRef.s[:, cnt_1, cnt_2])))
-                    TransDenom = TransDenom + np.sum(np.square(np.abs(SRef.s[:, cnt_1, cnt_2])))
+                    TransNumer = TransNumer + np.sum(np.square(np.abs(SComp.s[:, row, column] - SRef.s[:, row, column])))
+                    TransDenom = TransDenom + np.sum(np.square(np.abs(SRef.s[:, row, column])))
         NMSERef = RefNumer / RefDenom
         NMSETrans = TransNumer / TransDenom
         
