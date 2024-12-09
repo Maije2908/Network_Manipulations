@@ -240,7 +240,7 @@ def CalcSParameterNMSE(SComp, SRef):
     S-Parameter measurement, stored in a .csv file
     
     Input Parameters:
-        path   Path of the needed .csv file   
+        path   Path of the .csv file   
     
     Output parameters:
         None
@@ -281,8 +281,11 @@ def ZNAExtraction(path):
     Scc22_re = []
     Scc22_im = []
     
-    if path == '':
-        raise Exception('Path is emty or not a string')
+    if type(path) != str:
+        raise Exception('Path is not a string')
+    else:
+        if path == '':
+            raise Exception('Path is emty')                
     
     with open(path) as csvfile:
         reader = csv.reader(csvfile, delimiter = ';', quotechar='|')
