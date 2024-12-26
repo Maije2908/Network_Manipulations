@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-last change: 05.12.2024
-@author: Christoph Maier
+last change: 26.12.2024
+Author(s): Christoph Maier
 
-This module is a selection of functions for manipulations of S-Parameters.
+This module is a selection of functions for the manipulations of S-Parameters.
 """
 
 # import needed packages
@@ -11,42 +11,46 @@ import numpy as np
 import skrf as rf
 import csv
 
-# set default values of the variables
+# definition of constants
 eps = np.finfo(np.float64).eps # define epsilon (a very small number)
+
+# set default values of the variables
 ShowCMD = False # Flag if output in the command line should be shown
 ShowdB = False # Flag if results should be given in dB
 
 
 """
     A class to represent mixed-mode S-parameters (scattering parameters) for 
-    a network over a range of frequencies.
+    a network over a range of frequencies. Mixed-mode parameters are a special
+    kind of S-parameters, calculating the response to differential-mode (DM) 
+    and common-mode (CM) signals. 
 
     Attributes:
         frequency (list): A list of the frequency points.
         
         Differential-to-Differential S-parameters:
-        - Sdd11: Input reflection coefficient for differential signals.
-        - Sdd12: Reverse transmission coefficient for differential signals.
-        - Sdd21: Forward transmission coefficient for differential signals.
-        - Sdd22: Output reflection coefficient for differential signals.
+        - Sdd11: DM excitation @P1; DM measurement @P1
+        - Sdd12: DM excitation @P1; DM measurement @P2
+        - Sdd21: DM excitation @P2; DM measurement @P1
+        - Sdd22: DM excitation @P2; DM measurement @P2
 
         Differential-to-Common S-parameters:
-        - Sdc11: Reflection coefficient from differential to common-mode at input.
-        - Sdc12: Reverse transmission coefficient from differential to common-mode.
-        - Sdc21: Forward transmission coefficient from differential to common-mode.
-        - Sdc22: Reflection coefficient from differential to common-mode at output.
+        - Sdc11: DM excitation @P1; CM measurement @P1
+        - Sdc12: DM excitation @P1; CM measurement @P2
+        - Sdc21: DM excitation @P2; CM measurement @P1
+        - Sdc22: DM excitation @P2; CM measurement @P2
 
         Common-to-Differential S-parameters:
-        - Scd11: Reflection coefficient from common-mode to differential at input.
-        - Scd12: Reverse transmission coefficient from common-mode to differential.
-        - Scd21: Forward transmission coefficient from common-mode to differential.
-        - Scd22: Reflection coefficient from common-mode to differential at output.
+        - Scd11: CM excitation @P1; DM measurement @P1
+        - Scd12: CM excitation @P1; DM measurement @P2
+        - Scd21: CM excitation @P2; DM measurement @P1
+        - Scd22: CM excitation @P2; DM measurement @P2
 
         Common-to-Common S-parameters:
-        - Scc11: Input reflection coefficient for common-mode signals.
-        - Scc12: Reverse transmission coefficient for common-mode signals.
-        - Scc21: Forward transmission coefficient for common-mode signals.
-        - Scc22: Output reflection coefficient for common-mode signals.
+        - Scc11: CM excitation @P1; CM measurement @P1
+        - Scc12: CM excitation @P1; CM measurement @P2
+        - Scc21: CM excitation @P2; CM measurement @P1
+        - Scc22: CM excitation @P2; CM measurement @P2
 
     Methods:
         None
@@ -60,15 +64,17 @@ class MixedModeParameter:
                  scc21_re, scc21_im, scc22_re, scc22_im):
         
         """
-        Initializes the MixedModeParameter class by combining the real and imaginary
-        parts of the S-parameters into lists of complex numbers for each parameter.
+        Initializes the MixedModeParameter class by combining the real and
+        imaginary parts of the S-parameters into lists of complex numbers for
+        each parameter.
     
         Parameters:
             frequency (list): A list of frequency points.
-            sdd11_re, sdd11_im, ..., scc22_im (list): Real and imaginary parts of the S-parameters.
+            sdd11_re, sdd11_im, ..., scc22_im (list): Real and imaginary parts
+                                                    of the S-parameters.
     
-        Each S-parameter is represented as a list of complex numbers corresponding
-        to each frequency point.
+        Each S-parameter is represented as a list of complex numbers
+        corresponding to each frequency point.
         """
         self.frequency = frequency
         self.Sdd11 = [complex(r,i) for r, i in zip(sdd11_re, sdd11_im)]
@@ -91,8 +97,8 @@ class MixedModeParameter:
         
 
 '''
-    This function sets the global ShowCMD variable. Results will be shown in 
-    the command line. 
+    This function sets the global ShowCMD flag. The flag controls, if results
+    will be shown in the command line. 
     
     Input Parameters:
         None
@@ -107,8 +113,8 @@ def set_showCMD():
 
 
 '''
-    This function resets sets the global ShowCMD variable. Results will be shown
-    in the command line. 
+    This function resets sets the global ShowCMD flag. The flag controls, if
+    results will be shown in the command line. 
     
     Input Parameters:
         None
@@ -123,8 +129,8 @@ def reset_showCMD():
 
 
 '''
-    This function sets the global ShowdB variable. Results will be shown as 
-    dB values. 
+    This function sets the global ShowdB flag. This flag controls, if results
+    will be shown as dB value. 
     
     Input Parameters:
         None
@@ -139,8 +145,8 @@ def set_showdB():
 
 
 '''
-    This function resets the global ShowdB variable. Results will not be shown
-    as dB values. 
+    This function resets the global ShowdB flag. This flag controls, if results
+    will not be shown as dB values. 
     
     Input Parameters:
         None
