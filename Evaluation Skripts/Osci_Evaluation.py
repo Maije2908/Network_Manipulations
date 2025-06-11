@@ -29,8 +29,6 @@ def read_input(filename):
             
 if __name__ =='__main__':
     # define files to evaluate
-    filepath = 'Spectrum_Analyzer/'
-    
     filename_1MHz = ['Noise_9kHz-1MHz.DAT',
                      'Vin_150V_no_load_9kHz-1MHz.DAT',
                      'Vin_150V_15mA_9kHz-1MHz.DAT',
@@ -45,13 +43,11 @@ if __name__ =='__main__':
                       'Vin_150V_100mA_9kHz-10MHz.DAT',
                       'Vin_150V_200mA_9kHz-10MHz.DAT']
     
-    print(filepath+filename_1MHz)
-    
     value_1MHz = []
     value_10MHz = []
      
     for file in filename_1MHz:
-        value_1MHz.append(read_input(filepath+file))
+        value_1MHz.append(read_input(file))
         
     for file in filename_10MHz:
         value_10MHz.append(read_input(file))
