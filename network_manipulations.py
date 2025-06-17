@@ -184,7 +184,7 @@ def CalcSParameterNMSE(SComp, SRef):
     NMSERef =[]
     NMSETrans = []
     
-    # dif. error checks
+    # div. error checks
     if not isinstance(SComp, rf.network.Network):
         raise Exception('Given object is not a network object')
     else:
