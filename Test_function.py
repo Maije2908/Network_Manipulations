@@ -29,8 +29,11 @@ if __name__ =='__main__':
     # Flags control if answer is in dB or not
     NMSE_reflect, NMSE_transm = netman.calc_Sparam_NMSE(ntwk_1, ntwk_2)
  
-    # store S Parameters out of the network file in separate arrays
-    netman.set_showCMD()
+    # store SParameters out of the network file in separate arrays
     number_ports, number_points, frequency, SParameter = netman.extract_Sparam(ntwk_1)
 
+    # print S-Parameters
+    netman.set_showdB()
+    netman.plot_Sparam(frequency, SParameter, number_ports, 'subplot', 'log')
+    
     

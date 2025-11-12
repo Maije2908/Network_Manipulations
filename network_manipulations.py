@@ -7,6 +7,7 @@ This module is a selection of functions for the manipulations of S-Parameters.
 """
 
 # import needed packages
+import matplotlib.pyplot as plt
 import numpy as np 
 import skrf as rf
 import csv
@@ -199,8 +200,68 @@ def extract_Sparam(InputNetwork):
 '''
 
 '''    
-def plot_Sparam_4port():
-    print('Heelooooo')
+def plot_Sparam(f, SParams, NumPorts, howflag, spacing):
+    
+    # check if only one plot is desired 
+    if howflag == 'allinone':
+        for key, values in SParams.items():
+            # check if values should be dB or not
+            if ShowdB == 1:
+                xval =  20 * np.log10(np.abs(values))
+            else:
+                xval = np.abs(values)
+            
+            # check if spacing should be logarithmic or linear
+            if spacing == 'log':
+                plt.semilogx(f, xval, label=key)
+            elif spacing == 'lin':
+                plt.plot(f, xval, label=key)
+            else :
+                print('No valid keyword for spacing found.')  
+                
+        # make sure frequency vector is from min to max
+        plt.xlim(min(f), max(f))
+
+        # labeling and stuff
+        plt.xlabel('Frequency (Hz)')
+        if ShowdB == 1:
+            plt.ylabel('|S| (dB)')
+        else:
+            plt.ylabel('|S|')
+        plt.title('S-Parameters')
+        plt.legend()
+        plt.grid(which='major')
+        plt.grid(which='minor')
+        plt.show()
+             
+    
+    
+    
+    
+    
+    
+    
+    
+    elif howflag == 'subplot':
+        fig, axes = plt.subplots(NumPorts, NumPorts, figsize=(4*NumPorts, 4*NumPorts))
+
+    for i in range(NumPorts):
+        for j in range(NumPorts):
+            ax = axes[i, j] if NumPorts > 1 else axes  # handle 1×1 case
+    
+            if SParams[i][j].size > 0:
+                ax.plot(f, 20 * np.log10(np.abs(SParams[i][j])))
+                ax.set_title(f"S{i+1}{j+1}")
+            
+            ax.grid(True)
+            ax.set_xlabel("Frequency (GHz)")
+            ax.set_ylabel("|S| (dB)")
+        
+        
+    else:
+        print('ERROR: No valid keyword for format found.')
+
+
     
   
     
