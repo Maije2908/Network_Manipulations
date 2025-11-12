@@ -157,9 +157,53 @@ def set_showdB():
 def reset_showdB():
     global ShowdB
     ShowdB = False
-   
+
+
+
+'''
+    This function takes a network object and extracts the important parameters
+    out of it. Practical for later use.
     
-   
+    Input Parameters:
+        InputNetwork: network object of interst
+        
+    Output Parameters:
+        NumPorts: number of ports
+        fLen: number of measured points
+        f: frequency vector
+        SParams: S-Parameters, can be accessed by keyword(e.g. SParams['S11'])
+'''
+def extract_Sparam(InputNetwork):
+    # div. error checks
+    if not isinstance(InputNetwork, rf.network.Network):
+        raise Exception('Given object is not a network object')
+        
+    NumPorts = InputNetwork.number_of_ports
+    fLen = len(InputNetwork.f)
+    
+    if ShowCMD:
+        print('The network has ' + str(NumPorts) + ' ports.')
+        
+    f = InputNetwork.f
+    
+    SParams = {}
+    for row in range(NumPorts):
+        for column in range(NumPorts):
+            key = f"S{row+1}{column+1}"
+            SParams[key] = InputNetwork.s[:, row, column]
+
+    return [NumPorts, fLen, f, SParams]
+              
+
+
+'''
+
+'''    
+def plot_Sparam_4port():
+    print('Heelooooo')
+    
+  
+    
 '''
     This function calculates the normalized mean-square error (NMSE) of two
     S-parameter objects by comparing the transmission and the reflection
@@ -178,7 +222,7 @@ def reset_showdB():
         NMSERef     Calculated NMSE for the reflection coefficients 
         NMSETrans   Calculated NMSE for the transmission coefficients
 '''
-def CalcSParameterNMSE(SComp, SRef):
+def calc_Sparam_NMSE(SComp, SRef):
      
     # generate variables
     NMSERef =[]
@@ -251,7 +295,7 @@ def CalcSParameterNMSE(SComp, SRef):
     Output parameters:
         None
 '''
-def ZNAExtraction(path):
+def calc_Mixed_Mode_from_S(path):
     
     frequency = []
     Sdd11_re = []
@@ -342,3 +386,14 @@ def ZNAExtraction(path):
                               Scc21_re, Scc21_im, Scc22_re, Scc22_im)
     
     return ntwk
+
+
+
+
+
+
+
+
+
+
+

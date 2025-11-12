@@ -27,6 +27,10 @@ if __name__ =='__main__':
     ### Example useages ###
     # calculate the normalized mean-square error of two network objects 
     # Flags control if answer is in dB or not
-    NMSE_reflect, NMSE_transm = netman.CalcSParameterNMSE(ntwk_1, ntwk_2)
+    NMSE_reflect, NMSE_transm = netman.calc_Sparam_NMSE(ntwk_1, ntwk_2)
  
+    # store S Parameters out of the network file in separate arrays
+    netman.set_showCMD()
+    number_ports, number_points, frequency, SParameter = netman.extract_Sparam(ntwk_1)
+
     
