@@ -258,8 +258,13 @@ def plot_comp_Sparam(f_1, SParams_1, f_2, SParams_2,
             ax.grid(which='minor')
             ax.set_xlabel(xlabel)
             ax.set_ylabel(ylabel)
+            
+            if legend  == 'legon':
+                ax.legend(loc=legpos)
         
-        plt.suptitle(title)
+        if title != '':
+            plt.suptitle(title)
+        
         plt.tight_layout()
         
         
