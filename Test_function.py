@@ -27,21 +27,29 @@ if __name__ =='__main__':
     NMSE_reflect, NMSE_transm = netman.calc_Sparam_NMSE(ntwk_1, ntwk_2, valuetype = 'dB')
  
     # store SParameters out of the network file in separate arrays
-    number_ports, number_points, frequency, SParameter = netman.extract_Sparam(ntwk_4)
+    number_ports_1, number_points_1, frequency_1, SParameter_1 = netman.extract_Sparam(ntwk_1)
+    number_ports_2, number_points_2, frequency_2, SParameter_2 = netman.extract_Sparam(ntwk_3)
     
     # split up SParameters to desired ones
-    SParameter_parts = netman.sliceSparam(['S11','S12'], SParameter)
+    SParameter_parts = netman.sliceSparam(['S11','S12'], SParameter_1)
 
     # print S-Parameters
-    netman.plot_Sparam(frequency, SParameter_parts, number_ports, how='allinone',
+    netman.plot_Sparam(frequency_1, SParameter_1, number_ports_1, how='allinone',
                        spacing='log', valuetype='dB',
                        title='Single plot', xlabel='frequency (Hz)', ylabel='|S| dB',
                        legend='legon', legpos='best',
                        save = 'on', savename='single.png')
 
-    netman.plot_Sparam(frequency, SParameter, number_ports, how='subplot',
+    netman.plot_Sparam(frequency_1, SParameter_1, number_ports_1, how='subplot',
                        spacing='log', valuetype='dB',
                        title='Many Subplots', xlabel='frequency (Hz)', ylabel='|S| dB',
                        legend='legon', legpos='best',
                        save='on', savename='subplot.png')    
+    
+    netman.plot_comp_Sparam(frequency_1, SParameter_1, frequency_2, SParameter_2,
+                            number_ports_1, how='subplot',
+                            spacing='log', valuetype='dB',
+                            title='Many Subplots', xlabel='frequency (Hz)', ylabel='|S| dB',
+                            legend='legon', legpos='best',
+                            save='on', savename='compplot.png')
     
