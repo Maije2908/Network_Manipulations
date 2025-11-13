@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-Created on Thu Dec  5 10:56:46 2024
+last change: 13.11.2025
+Author(s): Christoph Maier
 
 @author: christoph_m
 """
@@ -18,13 +19,13 @@ if __name__ =='__main__':
     ntwk_3 = rf.Network(path + 'exam_3.s4p') # 4-port, 3995 pnt
     ntwk_4 = rf.Network(path + 'exam_4.s2p') # 2-port, 4001 pnt
     ntwk_5 = rf.Network(path + 'exam_5.s4p') # empty
-        
-    # set or reset flags
-    netman.set_showCMD() 
     
-    netman.reset_showCMD()
     
     ### Example useages ###
+    # set or reset flags
+    netman.set_showCMD() 
+    netman.reset_showCMD()
+    
     # calculate the normalized mean-square error of two network objects 
     # Flags control if answer is in dB or not
     NMSE_reflect, NMSE_transm = netman.calc_Sparam_NMSE(ntwk_1, ntwk_2, valuetype = 'dB')
