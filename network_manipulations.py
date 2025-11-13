@@ -259,5 +259,15 @@ def calc_Mixed_Mode_from_S(path):
 
 
 
+def sliceSparam(keys_to_extract, dict_input):
+    dict_output = {k: dict_input[k] for k in keys_to_extract}
+    
+    return dict_output
+
+
+
+
+
+
 
 

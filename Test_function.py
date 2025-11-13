@@ -31,9 +31,12 @@ if __name__ =='__main__':
  
     # store SParameters out of the network file in separate arrays
     number_ports, number_points, frequency, SParameter = netman.extract_Sparam(ntwk_4)
+    
+    # split up SParameters to desired ones
+    SParameter_parts = netman.sliceSparam(['S11','S12'], SParameter)
 
     # print S-Parameters
-    netman.plot_Sparam(frequency, SParameter, number_ports, how='allinone',
+    netman.plot_Sparam(frequency, SParameter_parts, number_ports, how='allinone',
                        spacing='log', valuetype='dB',
                        title='Single plot', xlabel='frequency (Hz)', ylabel='|S| dB',
                        legend='legon', legpos='best',
@@ -44,5 +47,4 @@ if __name__ =='__main__':
                        title='Many Subplots', xlabel='frequency (Hz)', ylabel='|S| dB',
                        legend='legon', legpos='best',
                        save='on', savename='subplot.png')    
-    
     
