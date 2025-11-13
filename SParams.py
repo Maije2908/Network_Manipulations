@@ -37,11 +37,10 @@ def extract_Sparam(InputNetwork):
         raise Exception('Given object is not a network object')
         
     NumPorts = InputNetwork.number_of_ports
+    f = InputNetwork.f
     fLen = len(InputNetwork.f)
     
     print('The network has ' + str(NumPorts) + ' ports.')
-        
-    f = InputNetwork.f
     
     SParams = {}
     for row in range(NumPorts):
