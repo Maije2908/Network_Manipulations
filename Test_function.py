@@ -11,11 +11,13 @@ import network_manipulations as netman
 if __name__ =='__main__':
         
     # define test files
-    ntwk_1 = rf.Network('exam_1.s4p') # 4-port, 4001 pnt
-    ntwk_2 = rf.Network('exam_2.s4p') # 4-port, 4001 pnt
-    ntwk_3 = rf.Network('exam_3.s4p') # 4-port, 3995 pnt
-    ntwk_4 = rf.Network('exam_4.s2p') # 2-port, 4001 pnt
-    ntwk_5 = rf.Network('exam_5.s4p') # empty
+    path = 'Examples/'
+    
+    ntwk_1 = rf.Network(path + 'exam_1.s4p') # 4-port, 4001 pnt
+    ntwk_2 = rf.Network(path + 'exam_2.s4p') # 4-port, 4001 pnt
+    ntwk_3 = rf.Network(path + 'exam_3.s4p') # 4-port, 3995 pnt
+    ntwk_4 = rf.Network(path + 'exam_4.s2p') # 2-port, 4001 pnt
+    ntwk_5 = rf.Network(path + 'exam_5.s4p') # empty
         
     # set or reset flags
     netman.set_showCMD() 
