@@ -53,6 +53,49 @@ def extract_Sparam(InputNetwork):
 
 
 '''
+    This function takes a network object and extracts the important parameters
+    out of it.
+    
+    Input Parameters:
+        InputNetwork: network object of interst
+        
+    Output Parameters:
+        NumPorts: number of ports
+        fLen: number of measured points
+        f: frequency vector
+        SParams: MM-Parameters, can be accessed by keyword(e.g. SParams['S11'])
+'''
+def extract_MMparam(InputNetwork):
+    # div. error checks
+    if not isinstance(InputNetwork, rf.network.Network):
+        raise Exception('Given object is not a network object')
+        
+    NumPorts = InputNetwork.number_of_ports
+    f = InputNetwork.f
+    fLen = len(InputNetwork.f)
+    
+    print('The network has ' + str(NumPorts) + ' ports.')
+    
+    SParams = {}
+    key_order = ['Sdd11','Sdc11','Sdd12','Sdc12',
+                 'Scd11', 'Scc11', 'Scd12', 'Scc12',
+                 'Sdd21', 'Sdc21', 'Sdd22', 'Sdc22',
+                 'Scd21', 'Scc21', 'Scd22', 'Scc22']
+    
+    # Flatten the 2D S-matrix into a 1D list to map to your keys
+    flat_s = InputNetwork.s.reshape(InputNetwork.s.shape[0], -1)
+
+    if flat_s.shape[1] != len(key_order):
+        raise Exception(f"Number of keys ({len(key_order)}) does not match number of S-parameters ({flat_s.shape[1]})")
+
+    for idx, key in enumerate(key_order):
+        SParams[key] = flat_s[:, idx]
+
+    return [NumPorts, fLen, f, SParams]
+
+
+
+'''
     This function takes a dict S-parameter object and 'slices'. It is needed
     to extract specific S-parameters out of a whole object.
     
