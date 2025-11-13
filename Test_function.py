@@ -19,21 +19,27 @@ if __name__ =='__main__':
         
     # set or reset flags
     netman.set_showCMD() 
-    netman.set_showdB()
     
     netman.reset_showCMD()
-    netman.reset_showdB()
     
     ### Example useages ###
     # calculate the normalized mean-square error of two network objects 
     # Flags control if answer is in dB or not
-    NMSE_reflect, NMSE_transm = netman.calc_Sparam_NMSE(ntwk_1, ntwk_2)
+    NMSE_reflect, NMSE_transm = netman.calc_Sparam_NMSE(ntwk_1, ntwk_2, valuetype = 'dB')
  
     # store SParameters out of the network file in separate arrays
-    number_ports, number_points, frequency, SParameter = netman.extract_Sparam(ntwk_1)
+    number_ports, number_points, frequency, SParameter = netman.extract_Sparam(ntwk_4)
 
     # print S-Parameters
-    netman.set_showdB()
-    netman.plot_Sparam(frequency, SParameter, number_ports, 'subplot', 'log')
-    
+    netman.plot_Sparam(frequency, SParameter, number_ports, how='allinone',
+                       spacing='log', valuetype='dB',
+                       title='Single plot', xlabel='frequency (Hz)', ylabel='|S| dB',
+                       legend='legon', legpos='best',
+                       save = 'on', savename='single.png')
+
+    netman.plot_Sparam(frequency, SParameter, number_ports, how='subplot',
+                       spacing='log', valuetype='dB',
+                       title='Many Subplots', xlabel='frequency (Hz)', ylabel='|S| dB',
+                       legend='legon', legpos='best',
+                       save='on', savename='subplot.png')    
     

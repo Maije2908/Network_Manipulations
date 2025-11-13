@@ -17,7 +17,6 @@ eps = np.finfo(np.float64).eps # define epsilon (a very small number)
 
 # set default values of the variables
 ShowCMD = False # Flag if output in the command line should be shown
-ShowdB = False # Flag if results should be given in dB
 
 
 """
@@ -130,40 +129,8 @@ def reset_showCMD():
 
 
 '''
-    This function sets the global ShowdB flag. This flag controls, if results
-    will be shown as dB value. 
-    
-    Input Parameters:
-        None
-    
-    Output parameters:
-        None
-'''
-def set_showdB():
-    global ShowdB
-    ShowdB = True
-
-
-
-'''
-    This function resets the global ShowdB flag. This flag controls, if results
-    will not be shown as dB values. 
-    
-    Input Parameters:
-        None
-    
-    Output parameters:
-        None
-'''
-def reset_showdB():
-    global ShowdB
-    ShowdB = False
-
-
-
-'''
     This function takes a network object and extracts the important parameters
-    out of it. Practical for later use.
+    out of it.
     
     Input Parameters:
         InputNetwork: network object of interst
@@ -200,70 +167,104 @@ def extract_Sparam(InputNetwork):
 '''
 
 '''    
-def plot_Sparam(f, SParams, NumPorts, howflag, spacing):
+def plot_Sparam(f, SParams, NumPorts, how='allinone',
+                spacing='lin', valuetype='lin',
+                title='', xlabel='', ylabel='',
+                legend='legoff', legpos='best',
+                save='off', savename='save.png'):
     
-    # check if only one plot is desired 
-    if howflag == 'allinone':
+    ### single plot ###
+    if how == 'allinone':
         for key, values in SParams.items():
             # check if values should be dB or not
-            if ShowdB == 1:
-                xval =  20 * np.log10(np.abs(values))
+            if valuetype == 'dB' :
+                yval =  20 * np.log10(np.abs(values))
+            elif valuetype == 'lin':
+                yval = np.abs(values)
             else:
-                xval = np.abs(values)
+                print('No valid keyword for value type found.')
+                return
             
             # check if spacing should be logarithmic or linear
             if spacing == 'log':
-                plt.semilogx(f, xval, label=key)
+                plt.semilogx(f, yval, label=key)
             elif spacing == 'lin':
-                plt.plot(f, xval, label=key)
+                plt.plot(f, yval, label=key)
             else :
                 print('No valid keyword for spacing found.')  
+                return
                 
-        # make sure frequency vector is from min to max
+        # let frequency start at min and end at max
         plt.xlim(min(f), max(f))
 
         # labeling and stuff
-        plt.xlabel('Frequency (Hz)')
-        if ShowdB == 1:
-            plt.ylabel('|S| (dB)')
-        else:
-            plt.ylabel('|S|')
-        plt.title('S-Parameters')
-        plt.legend()
+        if xlabel != '':
+            plt.xlabel(xlabel)
+        
+        if ylabel != '':
+            plt.ylabel(ylabel)
+
+        if title != '':
+            plt.title(title)
+        if legend  == 'legon':
+            plt.legend(loc=legpos)
+            
         plt.grid(which='major')
         plt.grid(which='minor')
-        plt.show()
-             
-    
-    
-    
-    
-    
-    
-    
-    
-    elif howflag == 'subplot':
+        
+        
+    ### subplots ###
+    elif how == 'subplot':
         fig, axes = plt.subplots(NumPorts, NumPorts, figsize=(4*NumPorts, 4*NumPorts))
 
-    for i in range(NumPorts):
-        for j in range(NumPorts):
-            ax = axes[i, j] if NumPorts > 1 else axes  # handle 1×1 case
-    
-            if SParams[i][j].size > 0:
-                ax.plot(f, 20 * np.log10(np.abs(SParams[i][j])))
-                ax.set_title(f"S{i+1}{j+1}")
+        for row in range(NumPorts):
+            for column in range(NumPorts):
+                # handle 1x1 case
+                ax = axes[row, column] if NumPorts > 1 else axes
+                
+                key = f"S{row+1}{column+1}"
+                if SParams[key].size > 0:
+                    # check if values should be dB or not
+                    if valuetype == 'dB' :
+                        yval =  20 * np.log10(np.abs(SParams[key]))
+                    elif valuetype == 'lin':
+                        yval = np.abs(SParams[key])
+                    else:
+                        print('No valid keyword for value type found.')
+                        return
+                    
+                    # check if spacing should be logarithmic or linear
+                    if spacing == 'log':
+                        ax.semilogx(f, yval, label=key)
+                    elif spacing == 'lin':
+                        ax.plot(f, yval, label=key)
+                    else :
+                        print('No valid keyword for spacing found.')  
+                        return
+                    
+                    ax.set_title(str(key))
+                    ax.set_xlim(min(f), max(f))
+                    ax.grid(which='major')
+                    ax.grid(which='minor')
+                    ax.set_xlabel(xlabel)
+                    ax.set_ylabel(ylabel)
             
-            ax.grid(True)
-            ax.set_xlabel("Frequency (GHz)")
-            ax.set_ylabel("|S| (dB)")
+        plt.suptitle(title)
+        plt.tight_layout()
         
         
+    ### no keyword found ###
     else:
-        print('ERROR: No valid keyword for format found.')
-
+        print('ERROR: No valid keyword for plot format found.')
+        
+    # save figure as png
+    if save == 'on':
+        plt.savefig(savename, dpi=600)
+    
+    # show plot
+    plt.show()
 
     
-  
     
 '''
     This function calculates the normalized mean-square error (NMSE) of two
@@ -271,19 +272,21 @@ def plot_Sparam(f, SParams, NumPorts, howflag, spacing):
     coefficients separately.
     
     Input Parameters:
-        SComp   network object of the S-parameter block which is
-                compared to the reference one
-        SRef    network object used as reference. The frequency grid
-                and the number of ports of the two S-parameter objects
-                must be the same
-                If this variable is left empty, a comparison to a
-                infinitesimally small, perfecly matched line
+        SComp: network object of the S-parameter block which is compared to
+               the reference one.
+        SRef: network object used as reference. The frequency grid and the
+              number of ports of the two S-parameter objects must be the same
+              If this variable is left empty, a comparison to a infinitesimally
+              small, perfecly matched line is made.
+        valuetype: Flag indicating whether output values are in dB or linear
+                   scale. If set to 'dB', output is in decibels; any other
+                   value (or empty) means linear scale.
     
     Output parameters:
         NMSERef     Calculated NMSE for the reflection coefficients 
         NMSETrans   Calculated NMSE for the transmission coefficients
 '''
-def calc_Sparam_NMSE(SComp, SRef):
+def calc_Sparam_NMSE(SComp, SRef, valuetype=' '):
      
     # generate variables
     NMSERef =[]
@@ -300,7 +303,7 @@ def calc_Sparam_NMSE(SComp, SRef):
             if not (SComp.number_of_ports == SRef.number_of_ports):
                raise Exception('The number of ports of the two objects do not agree')
             if not (len(SComp.f) == len(SRef.f)):
-                raise Exception('The number of mearuement points does not match')
+                raise Exception('The number of measurement points does not match')
                 
                 
     NumPorts = SComp.number_of_ports
@@ -332,7 +335,7 @@ def calc_Sparam_NMSE(SComp, SRef):
         NMSERef = RefNumer / RefDenom
         NMSETrans = TransNumer / TransDenom
         
-    if ShowdB:
+    if valuetype == 'dB':
         NMSERef = 10*np.log10(np.abs(NMSERef + eps))
         NMSETrans = 10*np.log10(np.abs(NMSETrans + eps))
         if ShowCMD:
