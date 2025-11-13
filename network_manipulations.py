@@ -6,15 +6,15 @@ Author(s): Christoph Maier
 This module is a selection of functions for the manipulations of S-Parameters.
 """
 
-# import needed packages
+# needed packages
 import numpy as np 
 import skrf as rf
 import csv
 
 # import my functions
 from myclasses import *
-from flags_functions import *
 from plot_functions import *
+from SParams import *
 
 
 # definition of constants
@@ -26,39 +26,7 @@ eps = np.finfo(np.float64).eps # define epsilon (a very small number)
     
     
 
-'''
-    This function takes a network object and extracts the important parameters
-    out of it.
-    
-    Input Parameters:
-        InputNetwork: network object of interst
-        
-    Output Parameters:
-        NumPorts: number of ports
-        fLen: number of measured points
-        f: frequency vector
-        SParams: S-Parameters, can be accessed by keyword(e.g. SParams['S11'])
-'''
-def extract_Sparam(InputNetwork):
-    # div. error checks
-    if not isinstance(InputNetwork, rf.network.Network):
-        raise Exception('Given object is not a network object')
-        
-    NumPorts = InputNetwork.number_of_ports
-    fLen = len(InputNetwork.f)
-    
-    if ShowCMD:
-        print('The network has ' + str(NumPorts) + ' ports.')
-        
-    f = InputNetwork.f
-    
-    SParams = {}
-    for row in range(NumPorts):
-        for column in range(NumPorts):
-            key = f"S{row+1}{column+1}"
-            SParams[key] = InputNetwork.s[:, row, column]
 
-    return [NumPorts, fLen, f, SParams]
               
 
 
@@ -138,9 +106,8 @@ def calc_Sparam_NMSE(SComp, SRef, valuetype=' '):
     if valuetype == 'dB':
         NMSERef = 10*np.log10(np.abs(NMSERef + eps))
         NMSETrans = 10*np.log10(np.abs(NMSETrans + eps))
-        if ShowCMD:
-            print(f'S-Parameter comparison: \nreflect - NMSE: {NMSERef:3.1f}dB \ntransm. - NMSE: {NMSETrans:3.1f}dB\n')
-    elif ShowCMD:
+        print(f'S-Parameter comparison: \nreflect - NMSE: {NMSERef:3.1f}dB \ntransm. - NMSE: {NMSETrans:3.1f}dB\n')
+    else:
         print(f'S-Parameter comparison: \nreflect - NMSE: {NMSERef:5.3f} \ntransm. - NMSE: {NMSETrans:5.3f}\n')          
 
     return NMSERef, NMSETrans
@@ -258,7 +225,9 @@ def calc_Mixed_Mode_from_S(path):
 
 
 
+'''
 
+'''
 def sliceSparam(keys_to_extract, dict_input):
     dict_output = {k: dict_input[k] for k in keys_to_extract}
     

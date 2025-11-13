@@ -22,10 +22,6 @@ if __name__ =='__main__':
     
     
     ### Example useages ###
-    # set or reset flags
-    netman.set_showCMD() 
-    netman.reset_showCMD()
-    
     # calculate the normalized mean-square error of two network objects 
     # Flags control if answer is in dB or not
     NMSE_reflect, NMSE_transm = netman.calc_Sparam_NMSE(ntwk_1, ntwk_2, valuetype = 'dB')
