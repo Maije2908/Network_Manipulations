@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-last change: 26.12.2024
+last change: 13.11.2025
 Author(s): Christoph Maier
 
 This module is a selection of functions for the manipulations of S-Parameters.
@@ -12,11 +12,11 @@ import numpy as np
 import skrf as rf
 import csv
 
+# import my functions
+from flags import *
+
 # definition of constants
 eps = np.finfo(np.float64).eps # define epsilon (a very small number)
-
-# set default values of the variables
-ShowCMD = False # Flag if output in the command line should be shown
 
 
 """
@@ -94,39 +94,7 @@ class MixedModeParameter:
         self.Scc21 = [complex(r,i) for r, i in zip(scc21_re, scc21_im)]
         self.Scc22 = [complex(r,i) for r, i in zip(scc22_re, scc22_im)]
         
-        
-
-'''
-    This function sets the global ShowCMD flag. The flag controls, if results
-    will be shown in the command line. 
     
-    Input Parameters:
-        None
-    
-    Output parameters:
-        None
-'''
-def set_showCMD():
-    global ShowCMD
-    ShowCMD = True
-
-
-
-'''
-    This function resets sets the global ShowCMD flag. The flag controls, if
-    results will be shown in the command line. 
-    
-    Input Parameters:
-        None
-    
-    Output parameters:
-        None
-'''
-def reset_showCMD():
-    global ShowCMD
-    ShowCMD = False
-    
-
 
 '''
     This function takes a network object and extracts the important parameters
