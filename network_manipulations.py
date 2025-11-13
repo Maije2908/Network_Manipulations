@@ -13,8 +13,9 @@ import skrf as rf
 import csv
 
 # import my functions
-from flags import *
 from myclasses import *
+from flags_functions import *
+
 
 # definition of constants
 eps = np.finfo(np.float64).eps # define epsilon (a very small number)
