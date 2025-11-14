@@ -1,9 +1,15 @@
 # -*- coding: utf-8 -*-
 """
-last change: 13.11.2025
+last change: 14.11.2025
 Author(s): Christoph Maier
 
-This file contains plotting functions for S-Parameters
+This file contains plotting functions for S-Parameters.
+
+The following functions are implemented:
+    conv_plot_values: helper function to plot in dB or abs values
+    plot_values: helper function to plot in lin or log frequency grid
+    plot_Sparam: to plot S-parameter in one single plot or subplots
+    plot_comp_Sparam: to plot comparison of S-parameter in one single plot or subplots
 """
 
 # import needed packages
