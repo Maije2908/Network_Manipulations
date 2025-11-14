@@ -12,7 +12,7 @@ Implemented functions:
     extract_MMparam: extracts the MM-parameters out of a network object
     slice_Sparam: 'slice' dict object. Needed to extract explicit S-parameter
     S_to_MM: calculate Mixed-Mode parameters out of S-parameter
-    calc_Sparam_NMSE: calculate the normalized mean-square error of two S-parameter sets
+    calc_Sparam_NMSE: calculate the normalized mean-square error of two networks
 """
 
 # needed packages
