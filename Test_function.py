@@ -27,11 +27,14 @@ if __name__ =='__main__':
     NMSE_reflect, NMSE_transm = netman.calc_Sparam_NMSE(ntwk_1, ntwk_2, valuetype = 'dB')
  
     # store SParameters out of the network file in separate arrays
-    number_ports_1, number_points_1, frequency_1, SParameter_1 = netman.extract_MMparam(ntwk_1)
+    key= ['Sdd11','Sdc11', 'Sdd12', 'Sdc12', 'Scd11', 'Scc11', 'Scd12', 'Scc12',
+          'Sdd21', 'Sdc21', 'Sdd22', 'Sdc22', 'Scd21', 'Scc21', 'Scd22', 'Scc22']
+    number_ports_1, number_points_1, frequency_1, SParameter_1 = netman.extract_MMparam(ntwk_1, key)
+    
     number_ports_2, number_points_2, frequency_2, SParameter_2 = netman.extract_Sparam(ntwk_3)
     
     # split up SParameters to desired ones
-    SParameter_parts = netman.sliceSparam(['S11','S12'], SParameter_2)
+    SParameter_parts = netman.slice_Sparam(['S11','S12'], SParameter_2)
 
     # print S-Parameters
     netman.plot_Sparam(frequency_1, SParameter_1, number_ports_1, how='allinone',

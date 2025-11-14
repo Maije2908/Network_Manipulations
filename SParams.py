@@ -6,6 +6,12 @@ Author(s): Christoph Maier
 This file contains different functions for the manipulation of S parameters,
 as well as the calculation of S parameters out of network files. Also
 calculation and manipulation of Mixed-Mode parameters are included.
+
+Implemented functions:
+    extract_Sparam: extracts the S-parameters out of a network object
+    extract_MMparam: extracts the MM-parameters out of a network object
+    slice_Sparam: 'slice' dict object. Needed to extract explicit S-parameter
+    calc_Mixed_Mode_from_S: calculate Mixed-Mode parameters out of S-parameter
 """
 
 # needed packages
@@ -65,7 +71,7 @@ def extract_Sparam(InputNetwork):
         f: frequency vector
         SParams: MM-Parameters, can be accessed by keyword(e.g. SParams['S11'])
 '''
-def extract_MMparam(InputNetwork):
+def extract_MMparam(InputNetwork, key_order):
     # div. error checks
     if not isinstance(InputNetwork, rf.network.Network):
         raise Exception('Given object is not a network object')
@@ -77,10 +83,6 @@ def extract_MMparam(InputNetwork):
     print('The network has ' + str(NumPorts) + ' ports.')
     
     SParams = {}
-    key_order = ['Sdd11','Sdc11','Sdd12','Sdc12',
-                 'Scd11', 'Scc11', 'Scd12', 'Scc12',
-                 'Sdd21', 'Sdc21', 'Sdd22', 'Sdc22',
-                 'Scd21', 'Scc21', 'Scd22', 'Scc22']
     
     # Flatten the 2D S-matrix into a 1D list to map to your keys
     flat_s = InputNetwork.s.reshape(InputNetwork.s.shape[0], -1)
@@ -108,7 +110,7 @@ def extract_MMparam(InputNetwork):
         dict_output: sliced output S-parameter dict object
         
 '''
-def sliceSparam(keys_to_extract, dict_input):
+def slice_Sparam(keys_to_extract, dict_input):
     dict_output = {k: dict_input[k] for k in keys_to_extract}
     
     return dict_output
@@ -117,107 +119,43 @@ def sliceSparam(keys_to_extract, dict_input):
 
 '''
     This function is needed to calculate the Mixed-Mode S-Parameters out of 
-    the "normal" S-Parameters. The Rohde und Schwarz ZNA is not able to store
-    the data in another format (as far as we know). The function needs a 4-port
-    S-Parameter measurement, stored in a .csv file
+    the "normal" S-Parameters dict.
     
     Input Parameters:
-        path: Path of the .csv file   
+        dict_in: 4-port S-parameter dict
     
     Output parameters:
-        None
+        dict_out: converted MM-parameter dict
 '''
-def calc_Mixed_Mode_from_S(path):
+def S_to_Mixed_Mode(dict_in):
     
-    frequency = []
-    Sdd11_re = []
-    Sdd11_im = []
-    Sdd12_re = []
-    Sdd12_im = []
-    Sdc11_re = []
-    Sdc11_im = []
-    Sdc12_re = []
-    Sdc12_im = []
-    Sdd21_re = []
-    Sdd21_im = []
-    Sdd22_re = []
-    Sdd22_im = []
-    Sdc21_re = []
-    Sdc21_im = []
-    Sdc22_re = []
-    Sdc22_im = []
-    Scd11_re = []
-    Scd11_im = []
-    Scd12_re = []
-    Scd12_im = []
-    Scc11_re = []
-    Scc11_im = []
-    Scc12_re = []
-    Scc12_im = []
-    Scd21_re = []
-    Scd21_im = []
-    Scd22_re = []
-    Scd22_im = []
-    Scc21_re = []
-    Scc21_im = []
-    Scc22_re = []
-    Scc22_im = []
+    S_mat = np.array([[dict_in["S11"], dict_in["S12"], dict_in["S13"], dict_in["S14"]],
+                      [dict_in["S21"], dict_in["S22"], dict_in["S23"], dict_in["S24"]],
+                      [dict_in["S31"], dict_in["S32"], dict_in["S33"], dict_in["S34"]],
+                      [dict_in["S41"], dict_in["S42"], dict_in["S43"], dict_in["S44"]]])
     
-    if type(path) != str:
-        raise Exception('Path is not a string')
-    else:
-        if path == '':
-            raise Exception('Path is emty')                
+    # Mixed-mode transform matrix
+    Transform = (1/np.sqrt(2)) * np.array([[1, -1, 0, 0], [1,  1, 0, 0],
+                                           [0,  0, 1, -1], [0,  0, 1,  1]])
     
-    with open(path) as csvfile:
-        reader = csv.reader(csvfile, delimiter = ';', quotechar='|')
-        next(reader,None)
-        next(reader,None)
-        next(reader,None)   # skip header (3 rows)
-        
-        for row in reader:
-            frequency.append(float(row[0]))
-            Sdd11_re.append(float(row[1]))
-            Sdd11_im.append(float(row[2]))
-            Sdd12_re.append(float(row[3]))
-            Sdd12_im.append(float(row[4])) 
-            Sdc11_re.append(float(row[5])) 
-            Sdc11_im.append(float(row[6])) 
-            Sdc12_re.append(float(row[7]))
-            Sdc12_im.append(float(row[8])) 
-            Sdd21_re.append(float(row[9])) 
-            Sdd21_im.append(float(row[10])) 
-            Sdd22_re.append(float(row[11])) 
-            Sdd22_im.append(float(row[12])) 
-            Sdc21_re.append(float(row[13])) 
-            Sdc21_im.append(float(row[14])) 
-            Sdc22_re.append(float(row[15])) 
-            Sdc22_im.append(float(row[16])) 
-            Scd11_re.append(float(row[17])) 
-            Scd11_im.append(float(row[18])) 
-            Scd12_re.append(float(row[19])) 
-            Scd12_im.append(float(row[20])) 
-            Scc11_re.append(float(row[21])) 
-            Scc11_im.append(float(row[22])) 
-            Scc12_re.append(float(row[23])) 
-            Scc12_im.append(float(row[24])) 
-            Scd21_re.append(float(row[25])) 
-            Scd21_im.append(float(row[26])) 
-            Scd22_re.append(float(row[27])) 
-            Scd22_im.append(float(row[28])) 
-            Scc21_re.append(float(row[29])) 
-            Scc21_im.append(float(row[30])) 
-            Scc22_re.append(float(row[31])) 
-            Scc22_im.append(float(row[32]))
-            
-    ntwk = MixedModeParameter(frequency, Sdd11_re, Sdd11_im, Sdd12_re, Sdd12_im,
-                              Sdc11_re, Sdc11_im, Sdc12_re, Sdc12_im, Sdd21_re, Sdd21_im,
-                              Sdd22_re, Sdd22_im, Sdc21_re, Sdc21_im, Sdc22_re, Sdc22_im,
-                              Scd11_re, Scd11_im, Scd12_re, Scd12_im, Scc11_re, Scc11_im,
-                              Scc12_re, Scc12_im, Scd21_re, Scd21_im, Scd22_re, Scd22_im,
-                              Scc21_re, Scc21_im, Scc22_re, Scc22_im)
+    # calculate inverse of transfomr matrix
+    Transform_inv = np.linalg.inv(Transform)
     
-    return ntwk
+    # Apply mixed-mode transform
+    # S_mm = T * S * Tinv
+    S_mat_exp = S_mat.transpose(2,0,1)
+    MixedMode_exp = Transform @ S_mat_exp @ Transform_inv
+    MixedMode = MixedMode_exp.transpose(1,2,0)
+    
+    labels = ["dd", "dc", "cd", "cc"]
+    dict_out = {}
+    
+    for i in range(4):
+        for j in range(4):
+            key = f"S{labels[i]}{labels[j]}"
+            dict_out[key] = MixedMode[i, j, :]
+    
+    return dict_out
 
 
 
