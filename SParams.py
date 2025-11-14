@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-last change: 13.11.2025
+last change: 14.11.2025
 Author(s): Christoph Maier
 
 This file contains different functions for the manipulation of S parameters,
@@ -11,14 +11,13 @@ Implemented functions:
     extract_Sparam: extracts the S-parameters out of a network object
     extract_MMparam: extracts the MM-parameters out of a network object
     slice_Sparam: 'slice' dict object. Needed to extract explicit S-parameter
-    calc_Mixed_Mode_from_S: calculate Mixed-Mode parameters out of S-parameter
+    S_to_MM: calculate Mixed-Mode parameters out of S-parameter
+    calc_Sparam_NMSE: calculate the normalized mean-square error of two S-parameter sets
 """
 
 # needed packages
 import skrf as rf
-import numpy as np 
-import csv
-from myclasses import MixedModeParameter
+import numpy as np
 
 # definition of constants
 eps = np.finfo(np.float64).eps # define epsilon (a very small number)
@@ -127,7 +126,7 @@ def slice_Sparam(keys_to_extract, dict_input):
     Output parameters:
         dict_out: converted MM-parameter dict
 '''
-def S_to_Mixed_Mode(dict_in):
+def S_to_MM(dict_in):
     
     S_mat = np.array([[dict_in["S11"], dict_in["S12"], dict_in["S13"], dict_in["S14"]],
                       [dict_in["S21"], dict_in["S22"], dict_in["S23"], dict_in["S24"]],
@@ -236,3 +235,5 @@ def calc_Sparam_NMSE(SComp, SRef, valuetype=' '):
         print(f'S-Parameter comparison: \nreflect - NMSE: {NMSERef:5.3f} \ntransm. - NMSE: {NMSETrans:5.3f}\n')          
 
     return NMSERef, NMSETrans
+
+
