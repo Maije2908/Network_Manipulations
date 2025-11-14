@@ -196,6 +196,7 @@ def plot_comp_Sparam(f_1, SParams_1, f_2, SParams_2,
                      spacing='lin', valuetype='lin',
                      title='', xlabel='', ylabel='',
                      legend='legoff', legpos='best',
+                     labels=['measurement 1','measurement 2'],
                      save='off', savename='save.png'):
     
     ### single plot ###
@@ -260,7 +261,7 @@ def plot_comp_Sparam(f_1, SParams_1, f_2, SParams_2,
             ax.set_ylabel(ylabel)
             
             if legend  == 'legon':
-                ax.legend(loc=legpos)
+                ax.legend(labels, loc=legpos)
         
         if title != '':
             plt.suptitle(title)
