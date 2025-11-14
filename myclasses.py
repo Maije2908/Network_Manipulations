@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-last change: 13.11.2025
+last change: 14.11.2025
 Author(s): Christoph Maier
 
-Here are the needed classes stored. Implemented classes are:
+The following classes are stored here:
     MixedModeParameter: A class to store the mixed-mode parameter.
 """
 
