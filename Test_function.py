@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-last change: 14.11.2025
+last change: 17.12.2025
 Author(s): Christoph Maier
 
 This is the test function to show how to use the functions. 
@@ -76,14 +76,21 @@ if __name__ =='__main__':
     ###########################################################################
     ###################### Impedance calulation examples ######################
     ###########################################################################
+    # S-Parameters are arbitrary. Impedance values are nonsense
+    key = 'imp_one'
     impedance_one = netman.calc_imp_oneport(frequency_S_one,
-                                            SParameter_one['S11'])
+                                            SParameter_one['S11'],
+                                            key)
 
+    key = 'imp_series'
     impedance_series = netman.calc_imp_seriesthru(frequency_S,
-                                                  SParameter['S21'])
+                                                   SParameter['S21'],
+                                                   key)
     
+    key = 'imp_shunt'
     impedance_shunt = netman.calc_imp_shuntthru(frequency_S,
-                                                SParameter['S21'])
+                                                SParameter['S21'],
+                                                key)
     
     
     
@@ -100,7 +107,7 @@ if __name__ =='__main__':
                        valuetype='dB',
                        title='Single plot',
                        xlabel='frequency (Hz)',
-                       ylabel='|S| dB',
+                       ylabel='|S| (dB)',
                        legend='legon',
                        legpos='best',
                        save = 'on',
@@ -116,14 +123,14 @@ if __name__ =='__main__':
                        valuetype='dB',
                        title='Many Subplots',
                        xlabel='frequency (Hz)',
-                       ylabel='|S| dB',
+                       ylabel='|S| (dB)',
                        legend='legon',
                        legpos='best',
                        save='on',
                        savename='subplot.png')    
     
     
-    ###################### print comparison of two S-parameter in subplots #####################
+    ############# print comparison of two S-parameter in subplots #############
     netman.plot_comp_Sparam(frequency_S,
                             SParameter,
                             frequency_S,
@@ -134,12 +141,29 @@ if __name__ =='__main__':
                             valuetype='dB',
                             title='Comparison Subplots',
                             xlabel='frequency (Hz)',
-                            ylabel='|S| dB',
+                            ylabel='|S| (dB)',
                             legend='legon',
                             legpos='best',
                             labels=['meas 1','meas 2'],
                             save='on',
                             savename='compplot.png')
+    
+    
+    ### print impedances in one plot + valid way to build dict out multiple ###
+    freq_test = [frequency_S_one, frequency_S, frequency_S]
+    imp_test = {**impedance_one, **impedance_series, **impedance_shunt}
+    
+    netman.plot_impedance(freq_test,
+                          imp_test,
+                          spacing='loglog',
+                          valuetype='lin',
+                          title='Comparison Impedance',
+                          xlabel='frequency (Hz)',
+                          ylabel='|Z| (Ohm)',
+                          legend='legon',
+                          legpos='best',
+                          save='on',
+                          savename='impedance.png')
     
     
     
