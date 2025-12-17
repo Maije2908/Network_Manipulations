@@ -30,7 +30,7 @@ if __name__ =='__main__':
           'Sdd21', 'Sdc21', 'Sdd22', 'Sdc22', 'Scd21', 'Scc21', 'Scd22', 'Scc22']
     [number_ports_MM, number_points_MM,
      frequency_MM, MMParameter] = netman.extract_MMparam(ntwk_1, key)
-    
+
     
     ########## Extract S-Parameter from the network and store in dict #########
     [number_ports_S, number_points_S,
