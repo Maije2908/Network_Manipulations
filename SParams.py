@@ -13,6 +13,9 @@ Implemented functions:
     slice_Sparam: 'slice' dict object. Needed to extract explicit S-parameter
     S_to_MM: calculate Mixed-Mode parameters out of S-parameter
     calc_Sparam_NMSE: calculate the normalized mean-square error of two networks
+    calc_imp_oneport: caluclate impedance out of S11
+    calc_imp_seriesthru: calculate impeance out of S21 with series-thru formula
+    calc_imp_shuntthru: calculate impedance out of S21 with shunt-thru formula
 """
 
 # needed packages
@@ -258,6 +261,7 @@ def calc_Sparam_NMSE(SComp,
     Input Parameters:
         f: frequency vector
         S11: measured S11 parameter (real and imag)
+        key: keyword for the creation of the dict
         port_imp: port impedance (50 Ohm if not given)
     
     Output parameters:
@@ -265,9 +269,11 @@ def calc_Sparam_NMSE(SComp,
 '''
 def calc_imp_oneport(f,
                      S11,
+                     key,
                      port_imp = 50):
-
-    impedance = -1 * port_imp * ((S11 + 1)/(S11 - 1))
+    
+    impedance = {}
+    impedance[key] = -1 * port_imp * ((S11 + 1)/(S11 - 1))
     
     return impedance
 
@@ -280,6 +286,7 @@ def calc_imp_oneport(f,
     Input Parameters:
         f: frequency vector
         S21: measured S21 parameter (real and imag)
+        key: keyword for the creation of the dict
         port_imp: port impedance (50 Ohm if not given)
     
     Output parameters:
@@ -287,11 +294,13 @@ def calc_imp_oneport(f,
 '''
 def calc_imp_seriesthru(f,
                         S21,
+                        key,
                         port_imp = 50):
 
-    impedance = 2 * port_imp * ((1/(S21)) - 1)
+    impedance = {}
+    impedance[key] = 2 * port_imp * ((1/(S21)) - 1)
     
-    return impedance    
+    return impedance
 
 
 
@@ -302,6 +311,7 @@ def calc_imp_seriesthru(f,
     Input Parameters:
         f: frequency vector
         S21: measured S21 parameter (real and imag)
+        key: keyword for the creation of the dict
         port_imp: port impedance (50 Ohm if not given)
     
     Output parameters:
@@ -309,10 +319,11 @@ def calc_imp_seriesthru(f,
 '''
 def calc_imp_shuntthru(f,
                       S21,
+                      key,
                       port_imp = 50):
 
-    impedance = port_imp/2 * (S21/(1 - S21))
+    impedance= {}
+    impedance[key] = port_imp/2 * (S21/(1 - S21))
     
-    return impedance    
-
+    return impedance
 
