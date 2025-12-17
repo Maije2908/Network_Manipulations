@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-last change: 14.11.2025
+last change: 17.12.2025
 Author(s): Christoph Maier
 
 This file contains plotting functions for S-Parameters.
@@ -30,7 +30,9 @@ import numpy as np
     Output Parameters:
         outval: converted outuput value        
 '''
-def conv_plot_values(values, valuetype):
+def conv_plot_values(values,
+                     valuetype):
+    
     if valuetype == 'dB':
         outval = 20 * np.log10(np.abs(values))
     elif valuetype == 'lin':
@@ -56,7 +58,11 @@ def conv_plot_values(values, valuetype):
     Output Parameters:
         None
 '''
-def plot_values(ax, frequency, values, key, spacing):
+def plot_values(ax,
+                frequency,
+                values,
+                key,
+                spacing):
     if spacing == 'log':
         ax.semilogx(frequency, values, label=key)
     elif spacing == 'lin':
@@ -96,11 +102,18 @@ def plot_values(ax, frequency, values, key, spacing):
     Output Parameters:
         None
 '''
-def plot_Sparam(f, SParams, NumPorts, how='allinone',
-                spacing='lin', valuetype='lin',
-                title='', xlabel='', ylabel='',
-                legend='legoff', legpos='best',
-                save='off', savename='save.png'):
+def plot_Sparam(f, SParams,
+                NumPorts,
+                how='allinone',
+                spacing='lin',
+                valuetype='lin',
+                title='',
+                xlabel='',
+                ylabel='',
+                legend='legoff',
+                legpos='best',
+                save='off',
+                savename='save.png'):
     
     ### single plot ###
     if how == 'allinone':
@@ -197,13 +210,22 @@ def plot_Sparam(f, SParams, NumPorts, how='allinone',
     Output Parameters:
         None
 '''
-def plot_comp_Sparam(f_1, SParams_1, f_2, SParams_2,
-                     NumPorts, how='allinone',
-                     spacing='lin', valuetype='lin',
-                     title='', xlabel='', ylabel='',
-                     legend='legoff', legpos='best',
+def plot_comp_Sparam(f_1,
+                     SParams_1,
+                     f_2,
+                     SParams_2,
+                     NumPorts,
+                     how='allinone',
+                     spacing='lin',
+                     valuetype='lin',
+                     title='',
+                     xlabel='',
+                     ylabel='',
+                     legend='legoff',
+                     legpos='best',
                      labels=['measurement 1','measurement 2'],
-                     save='off', savename='save.png'):
+                     save='off',
+                     savename='save.png'):
     
     ### single plot ###
     if how == 'allinone':
