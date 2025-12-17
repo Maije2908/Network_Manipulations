@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-last change: 14.11.2025
+last change: 17.12.2025
 Author(s): Christoph Maier
 
 This file contains different functions for the manipulation of S parameters,
@@ -37,6 +37,7 @@ eps = np.finfo(np.float64).eps # define epsilon (a very small number)
         SParams: S-Parameters, can be accessed by keyword(e.g. SParams['S11'])
 '''
 def extract_Sparam(InputNetwork):
+    
     # div. error checks
     if not isinstance(InputNetwork, rf.network.Network):
         raise Exception('Given object is not a network object')
@@ -53,7 +54,10 @@ def extract_Sparam(InputNetwork):
             key = f"S{row+1}{column+1}"
             SParams[key] = InputNetwork.s[:, row, column]
 
-    return [NumPorts, fLen, f, SParams]
+    return [NumPorts,
+            fLen,
+            f,
+            SParams]
 
 
 
@@ -70,7 +74,9 @@ def extract_Sparam(InputNetwork):
         f: frequency vector
         SParams: MM-Parameters, can be accessed by keyword(e.g. SParams['S11'])
 '''
-def extract_MMparam(InputNetwork, key_order):
+def extract_MMparam(InputNetwork,
+                    key_order):
+    
     # div. error checks
     if not isinstance(InputNetwork, rf.network.Network):
         raise Exception('Given object is not a network object')
@@ -92,7 +98,10 @@ def extract_MMparam(InputNetwork, key_order):
     for idx, key in enumerate(key_order):
         SParams[key] = flat_s[:, idx]
 
-    return [NumPorts, fLen, f, SParams]
+    return [NumPorts,
+            fLen,
+            f,
+            SParams]
 
 
 
@@ -109,7 +118,9 @@ def extract_MMparam(InputNetwork, key_order):
         dict_output: sliced output S-parameter dict object
         
 '''
-def slice_Sparam(keys_to_extract, dict_input):
+def slice_Sparam(keys_to_extract,
+                 dict_input):
+    
     dict_output = {k: dict_input[k] for k in keys_to_extract}
     
     return dict_output
@@ -178,7 +189,9 @@ def S_to_MM(dict_in):
         NMSERef     Calculated NMSE for the reflection coefficients 
         NMSETrans   Calculated NMSE for the transmission coefficients
 '''
-def calc_Sparam_NMSE(SComp, SRef, valuetype=' '):
+def calc_Sparam_NMSE(SComp,
+                     SRef,
+                     valuetype=' '):
      
     # generate variables
     NMSERef =[]
@@ -234,6 +247,7 @@ def calc_Sparam_NMSE(SComp, SRef, valuetype=' '):
     else:
         print(f'S-Parameter comparison: \nreflect - NMSE: {NMSERef:5.3f} \ntransm. - NMSE: {NMSETrans:5.3f}\n')          
 
-    return NMSERef, NMSETrans
+    return [NMSERef,
+            NMSETrans]
 
 
