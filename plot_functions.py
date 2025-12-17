@@ -28,7 +28,7 @@ import numpy as np
                    Raises Error, if no valid keyword is found
                    
     Output Parameters:
-        outval: converted outuput value        
+        outval: converted outuput value
 '''
 def conv_plot_values(values,
                      valuetype):
@@ -52,7 +52,8 @@ def conv_plot_values(values,
         values: array of input values
         key: key for labels
         spacing: 'lin' for plot with linear frequency spacing
-                 'log' for plot wiht logarithmic spacing 
+                 'log' for plot with logarithmic spacing 
+                 'loglog' for plot with logarithmic x and y axis
                    Raises Error, if no valid keyword is found
                    
     Output Parameters:
@@ -67,6 +68,8 @@ def plot_values(ax,
         ax.semilogx(frequency, values, label=key)
     elif spacing == 'lin':
         ax.plot(frequency, values, label=key)
+    elif spacing == 'loglog':
+        ax.loglog(frequency, values, label=key)
     else :
         raise ValueError('No valid keyword for spacing found.')        
 
@@ -84,10 +87,8 @@ def plot_values(ax,
         NumPorts: gives the number of ports of the S-Parameters
         how: 'allinone' for a single plot (multiple lines)
              'subplot' for subplots (one subplot for every line)
-        spacing: 'lin' for linear frequency grid
-                 'log' for logarithmic frequency grid
-        valuetype: 'lin' for linear y-axis values
-                   'dB' for y-axis values in dB
+        spacing: allow control of frequency grid
+        valuetype: allow control of y-axis grid
         title: string containing the overall title
         xlabel: string containing the x-axis labeling
         ylabel: string containing the y-axis labeling
@@ -102,7 +103,8 @@ def plot_values(ax,
     Output Parameters:
         None
 '''
-def plot_Sparam(f, SParams,
+def plot_Sparam(f,
+                SParams,
                 NumPorts,
                 how='allinone',
                 spacing='lin',
@@ -192,10 +194,8 @@ def plot_Sparam(f, SParams,
         NumPorts: gives the number of ports of the S-Parameters (for both sets)
         how: 'allinone' for a single plot (multiple lines)
              'subplot' for subplots (one subplot for every line)
-        spacing: 'lin' for linear frequency grid
-                 'log' for logarithmic frequency grid
-        valuetype: 'lin' for linear y-axis values
-                   'dB' for y-axis values in dB
+        spacing: allow control of frequency grid
+        valuetype: allow control of y-axis grid
         title: string containing the overall title
         xlabel: string containing the x-axis labeling
         ylabel: string containing the y-axis labeling
@@ -307,3 +307,75 @@ def plot_comp_Sparam(f_1,
     
     # show plot
     plt.show()
+
+
+
+'''
+    This function takes a set of impedance values (could also be one) and plots 
+    it. Only single plots are possible. Different flags control title and axis
+    names, as well as legend names. Plots can be saved as .png if desired.
+    
+    Input Parameters:
+        f: frequency list (vector)
+        impedance: dict in form {'imp_1':Numpy array, 'imp_2':Numpy array,...}
+        NumPorts: gives the number of ports of the S-Parameters
+        spacing: allow control of frequency grid
+        valuetype: allow control of y-axis grid
+        title: string containing the overall title
+        xlabel: string containing the x-axis labeling
+        ylabel: string containing the y-axis labeling
+        legend: 'legoff' to switch off legend
+                'legon' to switch on legend. Name of the legend entries is 
+                extracted from SParams
+        legpos: controls position of the legend (passed through to plt.legend())
+        save: 'on' plot is saved as .png
+              'off' plot is not saved
+        savename: string containing the name of the .png
+        
+    Output Parameters:
+        None
+'''
+def plot_impedance(f,
+                   impedance,
+                   spacing='lin',
+                   valuetype='lin',
+                   title='',
+                   xlabel='',
+                   ylabel='',
+                   legend='legoff',
+                   legpos='best',
+                   save='off',
+                   savename='save.png'):
+    
+    fig, ax = plt.subplots()
+    
+    for (key, values), freq in zip(impedance.items(), f):
+        yval = conv_plot_values(values, valuetype)
+        plot_values(ax, freq, yval, key, spacing)
+            
+    # let frequency start at min and end at max
+    plt.xlim(min(min(f_part) for f_part in f), max(max(f_part) for f_part in f))
+
+    # labeling and stuff
+    if xlabel != '':
+        plt.xlabel(xlabel)
+    
+    if ylabel != '':
+        plt.ylabel(ylabel)
+
+    if title != '':
+        plt.title(title)
+    if legend  == 'legon':
+        plt.legend(loc=legpos)
+        
+    plt.grid(which='major')
+    plt.grid(which='minor')
+        
+    # save figure as png
+    if save == 'on':
+        plt.savefig(savename, dpi=600)
+    
+    # show plot
+    plt.show()
+    
+    
