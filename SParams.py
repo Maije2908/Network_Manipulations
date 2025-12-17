@@ -186,8 +186,8 @@ def S_to_MM(dict_in):
                    value (or empty) means linear scale.
     
     Output parameters:
-        NMSERef     Calculated NMSE for the reflection coefficients 
-        NMSETrans   Calculated NMSE for the transmission coefficients
+        NMSERef: Calculated NMSE for the reflection coefficients 
+        NMSETrans: Calculated NMSE for the transmission coefficients
 '''
 def calc_Sparam_NMSE(SComp,
                      SRef,
@@ -249,5 +249,70 @@ def calc_Sparam_NMSE(SComp,
 
     return [NMSERef,
             NMSETrans]
+
+
+
+'''
+    This function calculates the impedance out of a one-port measurement.
+    
+    Input Parameters:
+        f: frequency vector
+        S11: measured S11 parameter (real and imag)
+        port_imp: port impedance (50 Ohm if not given)
+    
+    Output parameters:
+        impedance: calculated impedance value
+'''
+def calc_imp_oneport(f,
+                     S11,
+                     port_imp = 50):
+
+    impedance = -1 * port_imp * ((S11 + 1)/(S11 - 1))
+    
+    return impedance
+
+
+
+'''
+    This function calculates the impedance out of a series-thru two-port 
+    measurement.
+    
+    Input Parameters:
+        f: frequency vector
+        S21: measured S21 parameter (real and imag)
+        port_imp: port impedance (50 Ohm if not given)
+    
+    Output parameters:
+        impedance: calculated impedance value
+'''
+def calc_imp_seriesthru(f,
+                        S21,
+                        port_imp = 50):
+
+    impedance = 2 * port_imp * ((1/(S21)) - 1)
+    
+    return impedance    
+
+
+
+'''
+    This function calculates the impedance out of a shunt-thru two-port 
+    measurement.
+    
+    Input Parameters:
+        f: frequency vector
+        S21: measured S21 parameter (real and imag)
+        port_imp: port impedance (50 Ohm if not given)
+    
+    Output parameters:
+        impedance: calculated impedance value
+'''
+def calc_imp_shuntthru(f,
+                      S21,
+                      port_imp = 50):
+
+    impedance = port_imp/2 * (S21/(1 - S21))
+    
+    return impedance    
 
 

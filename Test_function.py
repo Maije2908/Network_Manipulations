@@ -20,6 +20,7 @@ if __name__ =='__main__':
     ntwk_3 = rf.Network(path + 'exam_3.s4p') # 4-port, 3995 pnt
     ntwk_4 = rf.Network(path + 'exam_4.s2p') # 2-port, 4001 pnt
     ntwk_5 = rf.Network(path + 'exam_5.s4p') # empty
+    ntwk_6 = rf.Network(path + 'exam_6.s1p') # 1-port, 501 pnt
     
     ###########################################################################
     ####################### Network Extraction examples #######################
@@ -33,28 +34,38 @@ if __name__ =='__main__':
 
     
     ########## Extract S-Parameter from the network and store in dict #########
-    [number_ports_S, number_points_S,
-     frequency_S, SParameter] = netman.extract_Sparam(ntwk_3)
+    # 2-port
+    [number_ports_S,
+     number_points_S,
+     frequency_S,
+     SParameter] = netman.extract_Sparam(ntwk_3)
     
-    
+    # 1 port
+    [number_ports_S_one,
+     number_points_S_one,
+     frequency_S_one,
+     SParameter_one] = netman.extract_Sparam(ntwk_6)    
     
     ###########################################################################
     ###################### Network manipulation examples ######################
     ###########################################################################
     
     ###### Calculate normalized mean-square error of two network objects ######
-    [NMSE_reflect, NMSE_transm] = netman.calc_Sparam_NMSE(
-        ntwk_1, ntwk_2, valuetype = 'dB')
+    [NMSE_reflect,
+     NMSE_transm] = netman.calc_Sparam_NMSE(ntwk_1,
+                                            ntwk_2,
+                                            valuetype = 'dB')
     
     
     
     ###########################################################################
     ############ S-Parameter and MM-Parameter manipulation examples ###########
-    ########################################################################### 
+    ###########################################################################
     
     ############### Split up S-Parameter dict into desired ones ###############
     key = ['S11','S12']
-    SParameter_parts = netman.slice_Sparam(key, SParameter)
+    SParameter_parts = netman.slice_Sparam(key,
+                                           SParameter)
     
     
     ######### Transform 4-Port S-Parameters into Mixed-Mode Parameters ########
@@ -63,32 +74,72 @@ if __name__ =='__main__':
     
     
     ###########################################################################
+    ###################### Impedance calulation examples ######################
+    ###########################################################################
+    impedance_one = netman.calc_imp_oneport(frequency_S_one,
+                                            SParameter_one['S11'])
+
+    impedance_series = netman.calc_imp_seriesthru(frequency_S,
+                                                  SParameter['S21'])
+    
+    impedance_shunt = netman.calc_imp_shuntthru(frequency_S,
+                                                SParameter['S21'])
+    
+    
+    
+    ###########################################################################
     ########################### Printing  examples ############################
     ########################################################################### 
     
     #################### print S-Parameters in single plot ####################
-    netman.plot_Sparam(frequency_S, SParameter, number_ports_S, how='allinone',
-                       spacing='log', valuetype='dB',
-                       title='Single plot', xlabel='frequency (Hz)', ylabel='|S| dB',
-                       legend='legon', legpos='best',
-                       save = 'on', savename='single.png')
+    netman.plot_Sparam(frequency_S,
+                       SParameter,
+                       number_ports_S,
+                       how='allinone',
+                       spacing='log',
+                       valuetype='dB',
+                       title='Single plot',
+                       xlabel='frequency (Hz)',
+                       ylabel='|S| dB',
+                       legend='legon',
+                       legpos='best',
+                       save = 'on',
+                       savename='single.png')
 
 
     ###################### print S-Parameters in subplots #####################
-    netman.plot_Sparam(frequency_S, SParameter, number_ports_S, how='subplot',
-                       spacing='log', valuetype='dB',
-                       title='Many Subplots', xlabel='frequency (Hz)', ylabel='|S| dB',
-                       legend='legon', legpos='best',
-                       save='on', savename='subplot.png')    
+    netman.plot_Sparam(frequency_S,
+                       SParameter,
+                       number_ports_S,
+                       how='subplot',
+                       spacing='log',
+                       valuetype='dB',
+                       title='Many Subplots',
+                       xlabel='frequency (Hz)',
+                       ylabel='|S| dB',
+                       legend='legon',
+                       legpos='best',
+                       save='on',
+                       savename='subplot.png')    
     
     
     ###################### print comparison of two S-parameter in subplots #####################
-    netman.plot_comp_Sparam(frequency_S, SParameter, frequency_S, SParameter,
-                            number_ports_S, how='subplot',
-                            spacing='log', valuetype='dB',
-                            title='Comparison Subplots', xlabel='frequency (Hz)', ylabel='|S| dB',
-                            legend='legon', legpos='best', labels=['meas 1','meas 2'],
-                            save='on', savename='compplot.png')
+    netman.plot_comp_Sparam(frequency_S,
+                            SParameter,
+                            frequency_S,
+                            SParameter,
+                            number_ports_S,
+                            how='subplot',
+                            spacing='log',
+                            valuetype='dB',
+                            title='Comparison Subplots',
+                            xlabel='frequency (Hz)',
+                            ylabel='|S| dB',
+                            legend='legon',
+                            legpos='best',
+                            labels=['meas 1','meas 2'],
+                            save='on',
+                            savename='compplot.png')
     
     
     
