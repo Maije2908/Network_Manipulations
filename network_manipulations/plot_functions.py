@@ -350,12 +350,17 @@ def plot_impedance(f,
     
     fig, ax = plt.subplots()
     
-    for (key, values), freq in zip(impedance.items(), f):
+    # change f into a dict with same keys as impedance
+    f = {key: f for key in impedance}
+    
+    for key, values in impedance.items():
         yval = conv_plot_values(values, valuetype)
-        plot_values(ax, freq, yval, key, spacing)
+        plot_values(ax, f[key], yval, key, spacing)
             
     # let frequency start at min and end at max
-    plt.xlim(min(min(f_part) for f_part in f), max(max(f_part) for f_part in f))
+    plt.xlim(
+        min(min(f_part) for f_part in f.values()),
+        max(max(f_part) for f_part in f.values()))
 
     # labeling and stuff
     if xlabel != '':
