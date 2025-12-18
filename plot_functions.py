@@ -10,6 +10,7 @@ The following functions are implemented:
     plot_values: helper function to plot in lin or log frequency grid
     plot_Sparam: to plot S-parameter in one single plot or subplots
     plot_comp_Sparam: to plot comparison of S-parameter in one single plot or subplots
+    plot_impedance: to plot impedances in one single plot
 """
 
 # import needed packages
