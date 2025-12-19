@@ -22,7 +22,3 @@ Intended usage:
     netman.extract_Sparam(...) or netman.SParams.extract_Sparam(...)
     netman.plot_impedance(...) or netman.plot_functions.plot_impedance(...)
 """
-
-from .myclasses import *
-from .plot_functions import *
-from .SParams import *
